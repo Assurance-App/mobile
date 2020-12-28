@@ -8,36 +8,68 @@ import { addICarttem, removeCartItem } from '../redux/actions'
 
 
 const Cart = ({ navigation }) => {
-
+  const items = useSelector(state => state.items);
+  const cartItems = useSelector(state => state.cartItems);
   const dispatch = useDispatch();
 
-  const items = useSelector(state => state.cartItems);
 
   const renderItems = items.map((item) => (
-    <View style={styles.item}>
-      <View key={item.key} style={styles.title}>
-        <MaterialCommunityIcons name={(item.type == 1) ? "car" : ((item.type === 2) ? "motorbike" : "truck")} size={40} color="white" />
-        <Text>{item.title}</Text>
-      </View>
-      <View style={styles.actions}>
-        <View>
-          <TouchableOpacity style={styles.action} onPress={() => {
-            //Paiement
-
-          }}>
-            <MaterialCommunityIcons name="credit-card-outline" size={40} color="white" />
-          </TouchableOpacity>
+    (cartItems.includes(item.key)) ?
+      (
+        <View key={item.key} style={styles.item}>
+          <View style={styles.title}>
+            <MaterialCommunityIcons name={(item.type == 1) ? "car" : ((item.type === 2) ? "motorbike" : "truck")} size={40} color="white" />
+            <Text>{item.title}</Text>
+          </View>
+          <View style={styles.actions}>
+            <View>
+              <TouchableOpacity style={styles.action} onPress={() => {
+                //Paiement
+                navigation.navigate("Paiement", {
+                  item: item
+                })
+              }}>
+                <MaterialCommunityIcons name="credit-card-outline" size={40} color="white" />
+              </TouchableOpacity>
+            </View>
+            <View>
+              <TouchableOpacity style={styles.action} onPress={() => {
+                dispatch(removeCartItem(item.key));
+              }}>
+                <MaterialCommunityIcons name="delete-outline" size={40} color="white" />
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-        <View>
-          <TouchableOpacity style={styles.action} onPress={() => {
-            dispatch(removeCartItem(item));
-          }}>
-            <MaterialCommunityIcons name="delete-outline" size={40} color="white" />
-          </TouchableOpacity>
-        </View>
+      ) : (<View></View>)
+  ));
+  return (
+    <View style={styles.container}>
+      <StatusBar navigation={navigation} topRightIcon={"keyboard-backspace"} onTopRightIconPress={() => {
+        navigation.navigate("Acceuil");
+      }}
+      />
+      <View style={styles.items}>
+        {
+          cartItems.length > 0 ?
+            renderItems
+            :
+            (
+              <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <Text>Votre panier est vide !</Text>
+                <TouchableOpacity style={styles.title} onPress={() => {
+                  navigation.navigate("Offres");
+                }}>
+                  <View>
+                    <Text>Offres</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )
+        }
       </View>
     </View>
-  ));
+  );
 
   return (
     <View style={styles.container}>
@@ -47,16 +79,16 @@ const Cart = ({ navigation }) => {
       />
       <View style={styles.items}>
         {(items.length <= 0) ? (
-          <View style={{flex :1,justifyContent:"center",alignItems:"center"}}>
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             <Text>Votre panier est vide !</Text>
-            <TouchableOpacity style={styles.title} onPress={()=>{
+            <TouchableOpacity style={styles.title} onPress={() => {
               navigation.navigate("Offres");
             }}>
               <MaterialCommunityIcons name="format-list-bulleted" size={"white"} color="gray" />
               <Text>offres</Text>
             </TouchableOpacity>
           </View>
-        ) : renderItems}
+        ) : <Text>Shita</Text>}
       </View>
     </View>
   );

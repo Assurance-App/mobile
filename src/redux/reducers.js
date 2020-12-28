@@ -7,6 +7,7 @@ const items = [
     title: "Assurance d'une voiture",
     body: 'amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt;',
     type: 1,
+    price: 3029,
     image: require('../assets/images/offre1.jpg')
   },
   {
@@ -14,6 +15,7 @@ const items = [
     title: "Assur'Moto : L'assurance qui vous convient",
     body: 'labore et dolore magna aliqua. Ut enim ad minim veniam',
     type: 2,
+    price: 2500,
     image: require('../assets/images/offre2.png')
   },
   {
@@ -21,6 +23,7 @@ const items = [
     title: "L’assurance d’un camion",
     body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elitam',
     type: 3,
+    price: 4099,
     image: require('../assets/images/offre3.jpg')
   },
   {
@@ -28,6 +31,7 @@ const items = [
     title: "Offre 4",
     body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elitam',
     type: 1,
+    price: 3500,
     image: require('../assets/images/offre1.jpg')
   },
   {
@@ -35,6 +39,7 @@ const items = [
     title: "Offre 5",
     body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elitam',
     type: 2,
+    price: 1599,
     image: require('../assets/images/offre2.png')
   },
   {
@@ -42,6 +47,7 @@ const items = [
     title: "Offre 6",
     body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elitam',
     type: 3,
+    price: 1999,
     image: require('../assets/images/offre3.jpg')
   },
 ]
@@ -60,9 +66,9 @@ const itemsReducer = (state = [...items], action) => {
 const cartReducer = (state = [], action) => {
   switch (action.type) {
     case 'addCartItem':
-      return [...state, action.item];
+      return [...state, action.payload];
     case 'removeCartItem':
-      return state.filter((item, index) => item.key !== action.item.key);
+      return state.filter((item, index) => item !== action.payload);
     default:
       return state;
   }

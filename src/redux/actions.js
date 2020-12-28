@@ -1,14 +1,14 @@
-export const addCartItem = (item) => {
+export const addCartItem = (key) => {
     return {
         type: "addCartItem",
-        item :item
+        payload :key
     }
 }
 
-export const removeCartItem = (item) => {
+export const removeCartItem = (id) => {
     return {
         type: "removeCartItem",
-        item :item
+        payload :id
     }
 }
 

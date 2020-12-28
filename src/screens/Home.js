@@ -5,7 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import StatusBar from '../components/StatusBar'
 import List from '../components/List'
-import { addItem, removeItem } from '../redux/actions'
+import { addCartItem, removeItem } from '../redux/actions'
 
 const Home = ({ navigation }) => {
   const items = useSelector(state => state.items);
@@ -63,24 +63,6 @@ const Home = ({ navigation }) => {
 
   const offreFooter = item => (
     <View style={{ flex: 1, justifyContent: "flex-end", flexDirection: "row" }}>
-      <TouchableOpacity>
-        <MaterialCommunityIcons name="cart-outline" size={40} color="gray" onPress={() => {
-          // Add to cart
-          dispatch(addItem(item));
-
-          // Navigate
-          navigation.navigate("Panier", {
-            item: item
-          })
-        }} />
-      </TouchableOpacity>
-      <TouchableOpacity>
-        <MaterialCommunityIcons name="dots-horizontal" size={40} color="gray" onPress={() => {
-          navigation.navigate("Details", {
-            item: item
-          })
-        }} />
-      </TouchableOpacity>
     </View>
 
   );

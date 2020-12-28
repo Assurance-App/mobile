@@ -1,15 +1,18 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Text,TouchableOpacity } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux'
 
 import Drawer from './Drawer';
 import Cart from '../screens/Cart';
 import Profile from '../screens/Profile';
+import { View } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
+    const cartItems = useSelector(state => state.cartItems);
 
     return (
         <Tab.Navigator
@@ -31,7 +34,14 @@ const Tabs = () => {
                             ? 'account-details'
                             : 'account-details';
                     }
-                    return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+                    return (
+                        <View style={{ flex: 1, flexDirection: "row" }} onPress={() => {
+
+                        }}>
+                            <MaterialCommunityIcons name={iconName} size={size} color={color} />
+                            {(route.name === 'Panier') ? <Text>{cartItems.length}</Text> : <View></View>}
+                        </View>
+                    );
                 },
             })}
             tabBarOptions={{

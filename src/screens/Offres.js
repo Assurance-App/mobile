@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ImageBackground, ToastAndroid, Platform, AlertIOS, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { useSelector, useDispatch } from 'react-redux'
-import { addCartItem, removeCartItem } from '../redux/actions'
+import { addCartItem, removeCartItem, addItem, removeItem } from '../redux/actions'
 
 import StatusBar from '../components/StatusBar'
 import List from '../components/List'
@@ -13,6 +13,16 @@ const Offers = ({ navigation }) => {
   const dispatch = useDispatch()
 
   const items = useSelector(state => state.items);
+  const cartItems = useSelector(state => state.cartItems);
+
+
+  const Toast = (msg) => {
+    if (Platform.OS === 'android') {
+      ToastAndroid.show(msg, ToastAndroid.SHORT)
+    } else {
+      AlertIOS.alert(msg);
+    }
+  }
 
   const offreHeader = item => (<Text>{item.title}</Text>);
 
@@ -25,19 +35,41 @@ const Offers = ({ navigation }) => {
 
   const offreFooter = item => (
     <View style={{ flex: 1, justifyContent: "flex-end", flexDirection: "row" }}>
-      <TouchableOpacity>
-        <MaterialCommunityIcons name="cart-outline" size={40} color="gray" onPress={() => {
-          // Add to cart
-          dispatch(addCartItem(item));
-
-          // Navigate
-          navigation.navigate("Panier", {
-            item: item
-          })
-        }} />
+      <TouchableOpacity style={styles.action} onPress={() => {
+        //Paiement
+        navigation.navigate("Paiement", {
+          item: item
+        })
+      }}>
+        <MaterialCommunityIcons name="credit-card-outline" size={40} color="#4682B4" />
       </TouchableOpacity>
       <TouchableOpacity>
-        <MaterialCommunityIcons name="dots-horizontal" size={40} color="gray" onPress={() => {
+        {
+          (cartItems.includes(item.key)) ?
+
+            <MaterialCommunityIcons name="cart-minus" size={40} color="#F5F5DC" onPress={() => {
+              // Add to cart
+              dispatch(removeCartItem(item.key));
+              // Navigate
+
+              Toast("L'assurance est supprimé au panier");
+              //navigation.navigate("Panier", { item: item })
+            }} />
+            :
+            (
+              <MaterialCommunityIcons name="cart-plus" size={40} color="#4682B4" onPress={() => {
+                // Add to cart
+                dispatch(addCartItem(item.key));
+                // Navigate
+
+                Toast("L'assurance est ajouté au panier");
+                //navigation.navigate("Panier", { item: item })
+              }} />
+            )
+        }
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <MaterialCommunityIcons name="dots-horizontal" size={40} color="#4682B4" onPress={() => {
           navigation.navigate("Details", {
             item: item
           })
@@ -47,13 +79,11 @@ const Offers = ({ navigation }) => {
 
   );
 
-
   return (
     <View style={styles.container}>
       <StatusBar navigation={navigation}
 
         topRightIcon={"keyboard-backspace"}
-
         onTopRightIconPress={() => {
           navigation.goBack();
         }}
@@ -71,6 +101,7 @@ const Offers = ({ navigation }) => {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -80,7 +111,7 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     flexDirection: "column",
-    paddingHorizontal : 10
+    paddingHorizontal: 10
   },
   image: {
     flex: 1,
