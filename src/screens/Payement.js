@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Image, StyleSheet, Dimensions } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, TextInput, Image, StyleSheet, Dimensions,TouchableOpacity, Modal} from 'react-native';
+import {WebView} from 'react-native-webview';
+
+//import { TouchableOpacity } from 'react-native-gesture-handler';
 import StatusBar from '../components/StatusBar'
 import { FontAwesome } from '@expo/vector-icons';
 
 const windowWidth = Dimensions.get('window').width;
 
 const Payement = ({ navigation, route: { params: { item } } }) => {
+    /*
     const [cardNumber, setCardNumber] = useState('');
     const [expiryDate, setExpiryDate] = useState('');
     const [icon, setIcon] = useState('');
@@ -100,6 +103,81 @@ const Payement = ({ navigation, route: { params: { item } } }) => {
 
         </View>
     );
+    */
+
+   const [showModal, setModal] = useState(false);  
+   const [status, setstatus] = useState("En attente"); 
+   const [statusColor, setstatusColor] = useState(styles.innerText); 
+
+
+
+     
+    const  handleResponse = (data) => {
+        if (data.title === "success") {
+            setModal(false);
+            setstatus("Payé");
+            setstatusColor(styles.innerText2)
+        } else if (data.title === "cancel") {
+            setModal(false);
+            setstatus("Annulé");
+        } else {
+            return;
+        }
+    };
+
+
+
+    return (
+        <View style={styles.container}>
+        <Modal visible={showModal}
+               onRequestClose={() => setModal({ showModal: false })}
+        >
+            <WebView
+                source={{ uri: "http://192.168.11.102:3000" }}
+                onNavigationStateChange={data =>handleResponse(data)}
+                injectedJavaScript={`document.f1.submit()`}
+            />
+        </Modal>
+
+            <StatusBar navigation={navigation} topRightIcon={"keyboard-backspace"} onTopRightIconPress={() => {
+                navigation.goBack();
+            }}
+            />
+            <Text>Paiement :</Text>
+            <View style={styles.item}>
+                <Text>{item.title}</Text>
+                <View>
+                    <View style={styles.image} >
+                        <Image source={item.image} style={styles.image} />
+                    </View>
+                    <View style={styles.form} >                                               
+                        <TouchableOpacity
+                            style={{ width: 300, height: 100 }}
+                            onPress={() => {setModal(true);
+                            }}
+                        >
+                            <View style={{
+                                alignSelf: 'center', backgroundColor: "#9CCFD5", padding: 5, borderRadius: 2, margin: 5
+                            }}>
+                                
+
+                                <Text><FontAwesome name="cc-mastercard" size={16} color="black" /> Payer {item.price} DH </Text>
+                            </View>
+                        </TouchableOpacity>
+                        <Text style={styles.normal} > Payment Status:  <Text style={statusColor} > {status}</Text></Text>
+                       
+
+                    </View>
+                </View>
+            </View>
+
+        </View>
+    );
+
+    
+
+
+
 }
 
 const styles = StyleSheet.create({
@@ -143,7 +221,17 @@ const styles = StyleSheet.create({
         shadowRadius: 10.32,
         elevation: 16,
         width: windowWidth * (0.95)
-    }
+    },
+    innerText: {
+      color: 'red'
+    },
+    innerText2: {
+        color: 'green'
+      },
+    normal: {
+        color: 'black'
+      }
+    
 });
 
 export default Payement;
