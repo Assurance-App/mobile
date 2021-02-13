@@ -133,7 +133,7 @@ const Payement = ({ navigation, route: { params: { item } } }) => {
                onRequestClose={() => setModal({ showModal: false })}
         >
             <WebView
-                source={{ uri: "http://192.168.11.102:3000" }}
+                source={{ uri: "http://192.168.11.104:3000" }}
                 onNavigationStateChange={data =>handleResponse(data)}
                 injectedJavaScript={`document.f1.submit()`}
             />

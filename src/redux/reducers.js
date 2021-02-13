@@ -7,7 +7,7 @@ const items = [
     title: "Assurance d'une voiture",
     body: 'amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt;',
     type: 1,
-    price: 3029,
+    price: 300,
     image: require('../assets/images/offre1.jpg')
   },
   {
@@ -15,7 +15,7 @@ const items = [
     title: "Assur'Moto : L'assurance qui vous convient",
     body: 'labore et dolore magna aliqua. Ut enim ad minim veniam',
     type: 2,
-    price: 2500,
+    price: 500,
     image: require('../assets/images/offre2.png')
   },
   {
